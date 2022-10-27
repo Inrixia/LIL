@@ -27,11 +27,13 @@ def stream_data():
 
 			yield packetDict
 
+packetPrefix = ""
 with open(f"{time.time()}.json", "a") as f:
 	f.write("[")
 	try:
 		for packet in stream_data():
-			f.write(json.dumps(packet)+",")
+			f.write(packetPrefix+json.dumps(packet))
+			packetPrefix = ","
 	except KeyboardInterrupt:
 		print("Finishing writing data...")
 		f.write("]")
