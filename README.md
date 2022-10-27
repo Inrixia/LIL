@@ -7,5 +7,5 @@ See https://github.com/LORD-MicroStrain/MSCL for documentation
 Example:
 
 ```
-lil.exe COM8 --baudRate 115200
+lil.exe COM8 --baudRate 115200 --newFileInterval 60
 ```

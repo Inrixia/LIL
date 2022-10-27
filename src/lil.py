@@ -8,11 +8,13 @@ parser = argparse.ArgumentParser(description="Lord IMU Data Logger")
 
 parser.add_argument("path", type=str, help="Serial port to connect to")
 parser.add_argument("--baudRate", type=int, dest="baudRate", help="Baud rate to use", default=115200)
+parser.add_argument("--newFileInterval", type=int, dest="newFileInterval", help="Interval in seconds to create a new file", default=60*60)
 
 args = parser.parse_args()
 
+node = mscl.DisplacementNode(mscl.Connection.Serial(args.path, args.baudRate))
+
 def stream_data():
-	node = mscl.DisplacementNode(mscl.Connection.Serial(args.path, args.baudRate))
 	while True:
 		# get all the packets that have been collected, with a timeout of 500 milliseconds
 		packets = node.getDataPackets(500)
@@ -27,14 +29,22 @@ def stream_data():
 
 			yield packetDict
 
-packetPrefix = ""
-with open(f"{time.time()}.json", "a") as f:
-	f.write("[")
-	try:
-		for packet in stream_data():
-			f.write(packetPrefix+json.dumps(packet))
-			packetPrefix = ","
-	except KeyboardInterrupt:
-		print("Finishing writing data...")
-		f.write("]")
-		f.close()
+
+
+def new_file(closeAt):
+	packetPrefix = ""
+	with open(f"{time.time()}.json", "a") as f:
+		f.write("[")
+		try:
+			for packet in stream_data():
+				f.write(packetPrefix+json.dumps(packet))
+				packetPrefix = ","
+				if time.time() >= closeAt:
+					break
+		finally:
+			print("Finishing writing data...")
+			f.write("]")
+			f.close()
+
+while True:
+	new_file(time.time()+args.newFileInterval)
