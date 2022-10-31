@@ -34,7 +34,7 @@ def stream_data():
 def new_file(closeAt):
 	packetPrefix = ""
 	file = f"{time.time()}.json"
-	print(f"Opening new file {file} for writing...")
+	print(f"[{time.time()}] - Opening new file {file} for writing...")
 	with open(file, "a") as f:
 		f.write("[")
 		try:
@@ -44,7 +44,7 @@ def new_file(closeAt):
 				if time.time() >= closeAt:
 					break
 		finally:
-			print(f"Writing end of file \"{file}\"...")
+			print(f"[{time.time()}] - Writing end of file \"{file}\"...")
 			f.write("]")
 			f.close()
 
