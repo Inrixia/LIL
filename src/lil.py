@@ -7,6 +7,7 @@ import argparse
 parser = argparse.ArgumentParser(description="Lord IMU Data Logger")
 
 parser.add_argument("path", type=str, help="Serial port to connect to")
+parser.add_argument("--savePath", type=str, default=".", help="Path to save files to")
 parser.add_argument("--baudRate", type=int, dest="baudRate", help="Baud rate to use", default=115200)
 parser.add_argument("--newFileInterval", type=int, dest="newFileInterval", help="Interval in seconds to create a new file", default=60*60)
 
@@ -33,7 +34,7 @@ def stream_data():
 
 def new_file(closeAt):
 	packetPrefix = ""
-	file = f"{time.time()}.json"
+	file = f"{args.savePath}\\{time.time()}.json"
 	print(f"[{time.time()}] - Opening new file {file} for writing...")
 	with open(file, "a") as f:
 		f.write("[")
