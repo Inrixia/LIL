@@ -4,6 +4,8 @@ import json
 
 import argparse
 
+from os import makedirs
+
 parser = argparse.ArgumentParser(description="Lord IMU Data Logger")
 
 parser.add_argument("path", type=str, help="Serial port to connect to")
@@ -34,7 +36,11 @@ def stream_data():
 
 def new_file(closeAt):
 	packetPrefix = ""
+	
 	file = f"{args.savePath}\\{time.time()}.json"
+	if args.savePath != ".":
+		makedirs(args.savePath, exist_ok=True)
+
 	print(f"[{time.time()}] - Opening new file {file} for writing...")
 	with open(file, "a") as f:
 		f.write("[")
