@@ -113,7 +113,7 @@ def new_sqlite_file(closeAt: Union[int, None]):
             if closeAt != None and time.time() >= closeAt:
                 break
     finally:
-        print("Closing DB")
+        print(f"[{time.time()}] - Closing DB \"{file}\"...")
         cur.close()
         db.commit()
         db.close()
